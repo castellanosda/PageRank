@@ -9,7 +9,7 @@
 using namespace std;
 
 int main(){
-    //thanos
+    //bobby schmurda
     //Beginning by initializing driver code variables
     int numLines, powerIterations;
     string from, to;
