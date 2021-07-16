@@ -21,7 +21,7 @@ int AdjacencyList<T>::edgeCount(T key)
 }
 
 template<typename T>
-std::vector<std::pair<T, int>> AdjacencyList<T>::getValue(T key) 
+std::vector<std::pair<T, int> > AdjacencyList<T>::getValue(T key) 
 {
     return adjacencyList[key];
 }
@@ -52,21 +52,22 @@ void AdjacencyList<T>::insert(T from, T to, int weight)
     adjacencyList[from].push_back(make_pair(to, weight));
     edgeCounter.at(indexMap[from])++;
 
-    std::cout << "from: " << from << " to: " << adjacencyList[from].at(0) << std::endl;
-
     //checks to see if to is in adjacencyList and adds if not found
     if(adjacencyList.find(to) == adjacencyList.end())
-        adjacencyList[to] = {};
+        adjacencyList[to];
+
+    std::cout << "vertices" << vCount << std::endl;
+    for(auto it = indexMap.begin(); it != indexMap.end(); it++)
+        std::cout << "key: " << it->first << " value: " << it->second << std::endl;
 }
 
 template<typename T>
 std::vector<float> AdjacencyList<T>::pageRank(int pIterations)
 {
-    std::vector<float> r_0;
-    std::vector<float> r_t;
+    std::vector<float> r;
 
     for(int i = 0; i < vCount + 1; i++)
-        r_0.push_back(1/(vCount + 1));
+        r.push_back(1/(vCount + 1));
     
     //powerIteration
     while(pIterations > 1)
@@ -76,18 +77,19 @@ std::vector<float> AdjacencyList<T>::pageRank(int pIterations)
             //variables for matrix multiplication
             int i = 0;
             float r_val = 0.0;
-            std::vector<std::pair<T, int>> directedEdges = adjacencyList[it->first];
+            std::vector<std::pair<T, int> > directedEdges = adjacencyList[it->first];
             
             //
             for(int j = 0;j < directedEdges.size();j++)
             {
                 //multiplication of r_0 and collapsed ith row of the adjacency list
-                r_val += (float)(r_0.at(indexMap[directedEdges.at(j).first()]))*(1.0/(float)(edgeCounter.at(it->second)));
+                r_val += (float)(r.at(indexMap[directedEdges.at(j).first]))*(1.0/(float)(edgeCounter.at(it->second)));
             }
             //pushing r_val into r_t
+            r.at(it->second) = r_val;
         }
         pIterations--;
     }
 
-    return r_t;
+    return r;
 }
