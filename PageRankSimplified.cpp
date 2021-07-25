@@ -1,9 +1,30 @@
-#include <string>
 #include <iostream>
+#include <iomanip>
 #include <map>
+#include <string>
 #include <vector>
 #include <iterator>
-#include "pagerankheader.h"
+#include <algorithm>
+
+template<typename T>
+class AdjacencyList{
+        std::map<T, std::vector<std::pair<T, int> > > adjacencyList;
+        std::map<T, int> indexMap;
+        int vCount;
+        std::vector<int> outdegrees;
+
+    public:
+        AdjacencyList();
+        int vertexCount();
+        int outDegrees(T key);
+        std::vector<std::pair<T, int> > getValue(T key);
+        void insert(T from, T to, int weight);  //for unweighted graphs, pass 0
+        std::vector<float> pageRank(int pIterations);
+        std::map<T, int>& getIM();
+        //Functions to write at later date:
+        //void setValue(T vertex, U val);
+        //void removeEdge(T key, T val)
+};
 
 template<typename T>
 AdjacencyList<T>::AdjacencyList()
@@ -100,4 +121,34 @@ template <typename T>
 std::map<T, int>& AdjacencyList<T>::getIM()
 {
     return indexMap;
+}
+
+int main(){
+    //Beginning by initializing driver code variables
+    int numLines, powerIterations;
+    int weight = 0; //unweighted graph
+    std::string from, to;
+    std::cin >> numLines;
+    std::cin >> powerIterations;
+    AdjacencyList<std::string> graph;
+
+    //Creates the graph
+    for(int i = 0; i < numLines; i++)
+    {
+        //Accepts from and to arguments from user
+        std::cin >> from;
+        std::cin >> to;
+
+        //Adds elements to the graph
+        graph.insert(from, to, weight);
+    }
+
+    //Returns the pageRank algorithm results as a vector and obtains the index map for iteration
+    std::vector<float> rankings = graph.pageRank(powerIterations);
+    std::map<std::string, int> indexMap = graph.getIM();
+
+    for(auto it = indexMap.begin(); it != indexMap.end(); it++)
+        std::cout << it->first << " " << std::fixed << std::setprecision(2) << rankings.at(it->second) << std::endl; 
+
+    return 0;
 }

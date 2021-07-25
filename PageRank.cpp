@@ -14,29 +14,28 @@ int main(){
     //Beginning by initializing driver code variables
     int numLines, powerIterations;
     int weight = 0; //unweighted graph
-    string from, to;
-    cin >> numLines;
-    cin >> powerIterations;
-    AdjacencyList<string> graph;
-
-    cout << numLines << " " << powerIterations << endl;
+    std::string from, to;
+    std::cin >> numLines;
+    std::cin >> powerIterations;
+    AdjacencyList<std::string> graph;
 
     //Creates the graph
-    
     for(int i = 0; i < numLines; i++)
     {
         //Accepts from and to arguments from user
-        cin >> from;
-        cin >> to;
+        std::cin >> from;
+        std::cin >> to;
 
         //Adds elements to the graph
         graph.insert(from, to, weight);
     }
 
-    vector<float> rankings = graph.pageRank(powerIterations);
+    //Returns the pageRank algorithm results as a vector and obtains the index map for iteration
+    std::vector<float> rankings = graph.pageRank(powerIterations);
+    std::map<std::string, int> indexMap = graph.getIM();
 
-    for(int i = 0; i < rankings.size(); i++)
-        cout << fixed << setprecision(2) << rankings.at(i) << endl; 
+    for(auto it = indexMap.begin(); it != indexMap.end(); it++)
+        std::cout << it->first << " " << std::fixed << std::setprecision(2) << rankings.at(it->second) << std::endl; 
 
     return 0;
 }
